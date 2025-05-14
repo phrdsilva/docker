@@ -19,8 +19,22 @@ FROM node:18-bullseye
 # Instala dependências necessárias
 USER root
 RUN apt-get update && \
-    apt-get install -y python3-pip ffmpeg curl && \
-    pip3 install yt-dlp
+    apt-get install -y --no-install-recommends \
+    python3-pip \
+    ffmpeg \
+    curl \
+    imagemagick \
+    fonts-noto \
+    fonts-noto-cjk \
+    fonts-noto-extra \
+    fonts-noto-unhinted \
+    fonts-noto-ui-core \
+    fonts-noto-ui-extra && \
+    pip3 install yt-dlp && \
+    apt-get clean && rm -rf /var/lib/apt/lists/*
+
+# Confirma a presença da fonte (apenas log para depuração, opcional)
+RUN find /usr/share/fonts -iname "NotoSerif_Condensed-BlackItalic.ttf" || echo "Fonte não encontrada"
 
 # Cria diretório para n8n e define como diretório de trabalho
 RUN mkdir -p /home/node/.n8n
@@ -29,7 +43,7 @@ WORKDIR /home/node
 # Instala o n8n
 RUN npm install n8n -g
 
-# Cria o usuário "node" (caso não exista) e define permissões
+# Ajusta permissões
 RUN chown -R node:node /home/node
 
 # Usa o usuário "node"
@@ -44,6 +58,26 @@ CMD ["n8n"]
 ```
 
 Salve como Dockerfile (sem extensão!). Se ele salvar como Dockerfile.txt, renomeie no Explorer ou no terminal.
+
+### Observações Importantes
+
+A fonte NotoSerif_Condensed-BlackItalic.ttf está presente no pacote fonts-noto-extra, mas às vezes ela fica com um caminho diferente. Um exemplo comum:
+
+```
+/usr/share/fonts/opentype/noto/NotoSerif-CondensedBlackItalic.ttf
+```
+
+No comando do convert, use o caminho correto:
+
+```
+-font "/usr/share/fonts/opentype/noto/NotoSerif-CondensedBlackItalic.ttf"
+```
+Ou valide dentro do container com:
+
+```
+docker exec -it n8n bash
+find /usr/share/fonts -iname "*CondensedBlackItalic*"
+```
 
 ### 3. Abra o terminal nessa pasta e construa a imagem
 
@@ -100,8 +134,6 @@ notepad docker-compose.yml
 Cole o seguinte conteúdo:
 
 ```
-version: '3.8'
-
 services:
   n8n:
     build:
@@ -171,7 +203,16 @@ docker-compose restart
 ```
 
 Para ver os logs ao vivo:
+
 ```
 docker-compose logs -f
 ```
 
+
+Reconstrua e reinicie
+
+```
+docker-compose down
+docker-compose build --no-cache
+docker-compose up -d
+```
