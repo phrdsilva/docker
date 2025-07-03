@@ -1,10 +1,9 @@
 ### PROMT
 
-```
-Preciso de orientações quanto a instalação de um sistema ubuntu.
-Irei preparar um servidor para n8n, preciso inicialmente saber qual é a melhor forma para fazer o particionamento para um disco de 1024gb.
+_"Preciso de orientações quanto a instalação de um sistema ubuntu.
+Irei preparar um servidor para n8n, preciso inicialmente saber qual é a melhor forma para fazer o particionamento para um disco de 1024gb."_
 
-```
+
 ### Requisitos típicos do servidor n8n:
 - Sistema de arquivos confiável.
 - Espaço para arquivos temporários e logs.
