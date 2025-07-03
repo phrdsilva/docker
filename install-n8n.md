@@ -1,10 +1,10 @@
 ### PROMT
 
-´´´
+```
 Preciso de orientações quanto a instalação de um sistema ubuntu.
 Irei preparar um servidor para n8n, preciso inicialmente saber qual é a melhor forma para fazer o particionamento para um disco de 1024gb.
 
-´´´
+```
 ### Requisitos típicos do servidor n8n:
 - Sistema de arquivos confiável.
 - Espaço para arquivos temporários e logs.
@@ -35,18 +35,18 @@ Vamos considerar LVM (opcional) e ext4 (ou xfs) como sistema de arquivos.
 
 Instale dependências:
 
-´´´
+```
 sudo apt update && sudo apt install docker.io docker-compose curl -y
-´´´
+```
 
 Instale n8n via Docker:
 
-´´´
+```
 docker run -it --rm \
     -p 5678:5678 \
     -v /data/n8n:/home/node/.n8n \
     n8nio/n8n
-´´´
+```
 Você pode ajustar /data/n8n para o caminho do seu disco real.
 
 
@@ -59,32 +59,32 @@ Use a partição /data para armazenar:
 - O banco de dados, se for local (SQLite ou PostgreSQL)
 - Backups
 
-´´´
+```
 /data/n8n         ← dados da aplicação
 /data/db          ← banco de dados (opcional)
-´´´
+```
 
 Crie os diretórios com:
 
-´´´
+```
 sudo mkdir -p /data/n8n /data/db
 sudo chown -R $USER:$USER /data/n8n /data/db
-´´´
+```
 
 
 ## 🐳 Instalação com Docker + Docker Compose
 
 1. Instalar Docker e Docker Compose
 
-´´´
+```
 sudo apt update && sudo apt install -y docker.io docker-compose
 sudo systemctl enable docker --now
-´´´
+```
 
 2. Criar docker-compose.yml
 Crie em /data/n8n/docker-compose.yml:
 
-´´´
+```
 version: '3'
 
 services:
@@ -102,57 +102,57 @@ services:
       - N8N_PORT=5678
       - TZ=America/Sao_Paulo
     restart: always
-´´´
+```
 
 Altere senha_forte_aqui para uma senha real e segura.
 
 
 3. Adicione o usuário ao grupo do docker
 
-´´´
+```
 sudo usermod -aG docker $USER
-´´´
+```
 
 Depois relogue ou reinicie a sessão para aplicar as permissões ao grupo.
 
 Você pode verificar se funcionou com:
 
-´´´
+```
 groups
-´´´
+```
 
 Devei aparecer algo como:
 
-´´´
+```
 pedrosilva : pedrosilva sudo docker
-´´´
+```
 
 4. Subir o container
 
-´´´
+```
 cd /data/n8n
 docker-compose up -d
-´´´
+```
 
 ## Acessar o n8n
 Acesse no navegador:
 
-´´´
+```
 http://<ip-do-servidor>:5678
-´´´
+```
 
 Use o login/senha definidos no docker-compose.yml.
 
 
 
-´´´
-´´´
+```
+```
 
 
-´´´
-´´´
+```
+```
 
 
-´´´
-´´´
+```
+```
 
