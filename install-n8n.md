@@ -87,20 +87,44 @@ Crie em /data/n8n/docker-compose.yml:
 version: '3'
 
 services:
+  postgres:
+    image: postgres:14
+    environment:
+      POSTGRES_USER: n8n
+      POSTGRES_PASSWORD: Qaz-poi.123
+      POSTGRES_DB: n8n
+    volumes:
+      - /data/db:/var/lib/postgresql/data
+    restart: always
+
   n8n:
     image: n8nio/n8n
     ports:
       - "5678:5678"
-    volumes:
-      - /data/n8n:/home/node/.n8n
     environment:
+      - DB_TYPE=postgresql
+      - DB_POSTGRESDB_HOST=postgres
+      - DB_POSTGRESDB_PORT=5432
+      - DB_POSTGRESDB_DATABASE=n8n
+      - DB_POSTGRESDB_USER=n8n
+      - DB_POSTGRESDB_PASSWORD=Qaz-poi.123
+      - DB_POSTGRESDB_SCHEMA=public
       - N8N_BASIC_AUTH_ACTIVE=true
       - N8N_BASIC_AUTH_USER=admin
-      - N8N_BASIC_AUTH_PASSWORD=senha_forte_aqui
-      - N8N_HOST=localhost
+      - N8N_BASIC_AUTH_PASSWORD=Qaz-poi.123
+      - N8N_HOST=n8n.araujogv.com.br
       - N8N_PORT=5678
+      - N8N_PROTOCOL=http
+      - WEBHOOK_URL=http://n8n.araujogv.com.br:5678/
+      - N8N_SECURE_COOKIE=false
       - TZ=America/Sao_Paulo
+      - GENERIC_TIMEZONE=America/Sao_Paulo
+    volumes:
+      - /data/n8n:/home/node/.n8n
+    depends_on:
+      - postgres
     restart: always
+
 ```
 
 Altere senha_forte_aqui para uma senha real e segura.
