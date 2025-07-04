@@ -236,6 +236,10 @@ Depois, reinicie:
 ```
 docker-compose down
 docker-compose up -d
+
+
+docker-compose down -v
+docker-compose up --build
 ```
 
 Alternativa: acessar via localhost
@@ -252,12 +256,18 @@ Mas isso só funciona se o navegador estiver rodando na mesma máquina.
 Assim que você definir N8N_SECURE_COOKIE=false, a mensagem desaparecerá, e o n8n vai funcionar normalmente em HTTP local.
 
 
+### Verifique logs com:
 
 ```
+docker-compose logs -f
 ```
 
+### Certifique-se de que os diretórios /data/db e /data/n8n existem e têm as permissões corretas. Senão, o Docker pode travar ou falhar ao montar.
 
 ```
+sudo mkdir -p /data/db /data/n8n
+sudo chown -R 1000:1000 /data/n8n
+sudo chown -R 999:999 /data/db
 ```
 
 
