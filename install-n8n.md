@@ -127,7 +127,7 @@ services:
 
 ```
 
-Altere senha_forte_aqui para uma senha real e segura.
+Altere a senha para uma senha real e segura.
 
 
 3. Adicione o usuário ao grupo do docker
@@ -144,13 +144,13 @@ Você pode verificar se funcionou com:
 groups
 ```
 
-Devei aparecer algo como:
+Deve aparecer algo como:
 
 ```
 pedrosilva : pedrosilva sudo docker
 ```
 
-4. Subir o container
+4. Subir o container do n8n
 
 ```
 cd /data/n8n
@@ -166,69 +166,12 @@ http://<ip-do-servidor>:5678
 
 Use o login/senha definidos no docker-compose.yml.
 
-### Como corrigir a mensagem:
+### Como corrigir a mensagem SE FOR SERVIDOR LOCAL PARA DEV:
 Desabilite secure cookies localmente com a variável N8N_SECURE_COOKIE=false
 Se estiver executando via terminal direto:
 
 ```
 export N8N_SECURE_COOKIE=false
-```
-n8n
-
-🐳 Se estiver usando Docker Compose:
-
-No seu docker-compose.yml, adicione essa linha:
-
-```
-environment:
-  - N8N_SECURE_COOKIE=false
-```
-
-Exemplo completo:
-
-```
-version: '3'
-
-services:
-version: '3'
-
-services:
-  postgres:
-    image: postgres:14
-    environment:
-      POSTGRES_USER: n8n
-      POSTGRES_PASSWORD: senha_postgres  # Altere para uma senha segura
-      POSTGRES_DB: n8n
-    volumes:
-      - /data/db:/var/lib/postgresql/data
-    restart: always
-
-  n8n:
-    image: n8nio/n8n
-    ports:
-      - "5678:5678"
-    environment:
-      - DB_TYPE=postgresdb
-      - DB_POSTGRESDB_HOST=postgres
-      - DB_POSTGRESDB_PORT=5432
-      - DB_POSTGRESDB_DATABASE=n8n
-      - DB_POSTGRESDB_USER=n8n
-      - DB_POSTGRESDB_PASSWORD=senha_postgres  # Use a mesma senha definida no serviço postgres
-      - N8N_BASIC_AUTH_ACTIVE=true
-      - N8N_BASIC_AUTH_USER=admin
-      - N8N_BASIC_AUTH_PASSWORD=@Qaz-poi.123  # Mantive sua senha original
-      - N8N_HOST=localhost
-      - N8N_PORT=5678
-      - N8N_PROTOCOL=http
-      - WEBHOOK_URL=http://localhost:5678/
-      - N8N_SECURE_COOKIE=false
-      - TZ=America/Sao_Paulo
-    volumes:
-      - /data/n8n:/home/node/.n8n
-    depends_on:
-      - postgres
-    restart: always
-
 ```
 
 Depois, reinicie:
@@ -236,8 +179,9 @@ Depois, reinicie:
 ```
 docker-compose down
 docker-compose up -d
+```
 
-
+```
 docker-compose down -v
 docker-compose up --build
 ```
@@ -250,13 +194,15 @@ http://localhost:5678
 ou
 http://ip_do_servidor:5678
 ```
+
 Mas isso só funciona se o navegador estiver rodando na mesma máquina.
+
 
 ✅ Resultado esperado
 Assim que você definir N8N_SECURE_COOKIE=false, a mensagem desaparecerá, e o n8n vai funcionar normalmente em HTTP local.
 
 
-### Verifique logs com:
+### Para verificar verifiquar logs:
 
 ```
 docker-compose logs -f
@@ -270,7 +216,62 @@ sudo chown -R 1000:1000 /data/n8n
 sudo chown -R 999:999 /data/db
 ```
 
+### Verificar se está rodando
 
 ```
+docker ps
 ```
+
+Você deve ver algo assim:
+
+```
+CONTAINER ID   IMAGE           ...   PORTS                     NAMES
+xxxxx          n8nio/n8n       ...   0.0.0.0:5678->5678/tcp    nome_n8n
+xxxxx          postgres:14     ...   5432/tcp                  nome_postgres
+
+```
+
+Para ver os logs do n8n:
+```
+docker-compose logs -f n8n
+```
+
+## Comandos úteis
+
+### Parar os containers:
+
+```
+docker-compose down
+```
+
+### Reiniciar containers (sem apagar volumes):
+```
+docker-compose restart
+```
+
+### Ver status dos serviços:
+
+```
+docker-compose ps
+```
+
+
+```
+
+```
+
+
+```
+
+```
+
+
+
+
+
+
+
+
+
+
 
